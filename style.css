@@ -1,44 +1,221 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     padding: 20px;
-    background: #f9f9f9;
+    min-height: 100vh;
+    background-color: #1f262d;
+    /* 深色底 */
+    background-image:
+        radial-gradient(circle at center, #2a313a 1px, transparent 2px),
+        linear-gradient(90deg, #222a33 5%, #2f3743 50%, #222a33 95%);
+    background-repeat: repeat, repeat-x;
+    background-size: 20px 20px, 100% 8px;
+    background-position: center center, top 15px left 0;
+    color: #d0e9ff;
+    box-shadow:
+        inset 0 0 40px #0008,
+        inset 0 -8px 25px #3a4a60cc,
+        0 0 20px #2a3a50bb;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
 }
 
-h1 {
-    margin-bottom: 5px;
+/* 弹窗背景遮罩 */
+#add-product-modal,
+#checkout-modal {
+    display: none;
+    /* 默认隐藏 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(20, 25, 30, 0.75);
+    /* 深色半透明背景 */
+    backdrop-filter: blur(5px);
+    /* 背景模糊增加质感 */
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 弹窗主体 */
+#add-product-modal>div,
+#checkout-modal>div {
+    background: linear-gradient(145deg, #2c333b, #22272e);
+    border-radius: 14px;
+    padding: 25px 30px;
+    width: 320px;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.8),
+        inset 0 0 10px #3a4a60,
+        0 0 6px #4d6bd1;
+    color: #d0e9ff;
+    font-weight: 600;
     text-align: center;
-    font-size: 36px;
-    font-weight: bold;
-    font-family: 'Georgia', serif;
+
+    /* 初始状态缩小且透明 */
+    opacity: 0;
+    transform: scale(0.8);
+    animation-fill-mode: forwards;
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#category-buttons button,
+/* 弹出动画 */
+#add-product-modal.show>div,
+#checkout-modal.show>div {
+    animation-name: modalFadeIn;
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 关闭动画 */
+#add-product-modal.hide>div,
+#checkout-modal.hide>div {
+    animation-name: modalFadeOut;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+/* 动画关键帧 */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes modalFadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+/* 标题阴影 */
+h1,
+h2 {
+    text-align: center;
+    text-shadow:
+        1px 1px 0 #0008,
+        0 0 10px #4bb8ff88;
+}
+
+/* --- 机械风按钮 --- */
+button,
 .btn {
-    margin: 5px 5px 10px 0;
-    padding: 6px 10px;
+    background: linear-gradient(145deg, #3a3f47, #23272e);
+    border: 2px solid #4a90e2;
+    border-radius: 6px;
+    box-shadow:
+        2px 2px 5px #1c2127,
+        inset 0 1px 0 #6ea3ff,
+        inset 0 -1px 3px #2a2f36;
+    color: #aaccff;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.6s ease;
+    position: relative;
+    overflow: hidden;
+    padding: 6px 10px;
+    margin: 5px 5px 10px 0;
+    display: inline-block;
+    animation: slowMove 4s ease-in-out infinite;
+    user-select: none;
 }
 
+button:hover,
+.btn:hover {
+    background: linear-gradient(145deg, #4a90e2, #1a4f9e);
+    box-shadow:
+        0 0 15px #4a90e2,
+        inset 0 0 10px #4a90e2;
+    color: #d0e9ff;
+    transform: translateY(-3px);
+}
+
+button:active,
+.btn:active {
+    box-shadow:
+        inset 2px 2px 4px #1a1d21,
+        inset -2px -2px 4px #535a69;
+    transform: translateY(1px);
+}
+
+/* 缓慢移动动画：上下浮动 */
+@keyframes slowMove {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* --- 产品列表、购物车、交易记录列表样式 --- */
 #product-list,
-#cart-list {
+#cart-list,
+#transaction-history {
     list-style: none;
     padding: 0;
     max-height: 300px;
     overflow-y: auto;
-    border: 1px solid #ccc;
-    background: white;
+    border: 1px solid #4a90e2;
+    background: #2c323a;
+    border-radius: 8px;
+    box-shadow:
+        inset 0 0 8px #1a4f9e,
+        0 0 10px #4a90e2aa;
     margin-bottom: 10px;
+    user-select: text;
 }
 
 #product-list li,
-#cart-list li {
+#cart-list li,
+#transaction-history li {
     display: flex;
     justify-content: space-between;
-    padding: 6px 10px;
-    border-bottom: 1px solid #eee;
+    padding: 8px 12px;
+    border-bottom: 1px solid #394452;
     align-items: center;
+    color: #aaccee;
+    font-weight: 500;
+    transition: background-color 0.5s ease;
 }
 
+#product-list li:hover,
+#cart-list li:hover,
+#transaction-history li:hover {
+    background-color: #1e2a3a;
+}
+
+/* 列表按钮调整 */
+#product-list li button,
+#cart-list li button,
+#transaction-history li button {
+    padding: 4px 8px;
+    font-size: 0.85em;
+    margin-left: 8px;
+}
+
+/* --- 模态窗口样式 --- */
 #add-product-modal,
 #checkout-modal {
     display: none;
@@ -48,49 +225,124 @@ h1 {
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(18, 25, 36, 0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     justify-content: center;
     align-items: center;
 }
 
 #add-product-modal>div,
 #checkout-modal>div {
-    background: white;
-    padding: 20px;
-    border-radius: 6px;
+    background: linear-gradient(145deg, #2a2f36, #1b1e23);
+    padding: 25px 30px;
+    border-radius: 12px;
     width: 320px;
+    box-shadow:
+        0 0 20px #1a4f9eaa,
+        inset 0 0 10px #4a90e2bb;
     text-align: center;
+    color: #aaccff;
+    user-select: none;
 }
 
-#add-product-modal label,
-#checkout-modal label {
-    display: block;
-    margin-top: 10px;
+#add-product-modal h3,
+#checkout-modal h3 {
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-shadow: 0 0 10px #4a90e2cc;
+}
+
+/* 表单组 */
+.form-group {
     text-align: left;
+    margin-bottom: 15px;
 }
 
-#total {
-    font-weight: bold;
-    font-size: 18px;
-    margin-top: 10px;
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #84a9d9;
 }
 
-#checkout-btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
+.form-group input {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1.5px solid #4a90e2;
+    background: #1e2531;
+    color: #aaccff;
+    font-weight: 600;
+    box-sizing: border-box;
+    transition: border-color 0.5s ease;
 }
 
-/* Modal radio groups */
+.form-group input:focus {
+    border-color: #7fc0ff;
+    outline: none;
+    box-shadow: 0 0 8px #4a90e2aa;
+}
+
+/* 单选按钮组 */
 .radio-group {
     margin: 15px 0;
     text-align: left;
+    user-select: none;
 }
 
 .radio-group label {
-    margin-right: 15px;
+    margin-right: 20px;
+    font-weight: 600;
+    color: #8ab5ff;
+    cursor: pointer;
     user-select: none;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 6px;
+    accent-color: #4a90e2;
+    cursor: pointer;
+}
+
+/* 总计文字 */
+#total {
+    font-weight: 700;
+    font-size: 18px;
+    margin-top: 10px;
+    color: #79aaff;
+    text-shadow: 0 0 8px #4a90e2aa;
+    user-select: none;
+}
+
+/* 其他细节 */
+#category-buttons button {
+    user-select: none;
+}
+
+/* 自定义滚动条机械风 */
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: #222a33;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #4a90e2, #1a4f9e);
+    border-radius: 5px;
+    border: 2px solid #222a33;
+}
+
+/* 禁止文本选择提升机械感 */
+body,
+button,
+input {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input {
+    user-select: text;
+    /* 允许输入框选择文本 */
 }
