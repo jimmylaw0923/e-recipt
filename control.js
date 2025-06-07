@@ -319,9 +319,7 @@ document.getElementById("checkout-cancel").onclick = () => {
 
 // 初始添加产品（只会在 localStorage 没有数据时添加）
 if (!localStorage.getItem("products")) {
-    products = [
-        { sku: "T001", name: "CAR KEY", price: 80, category: "key" }
-    ];
+    products = [];
     saveProducts();
 }
 
